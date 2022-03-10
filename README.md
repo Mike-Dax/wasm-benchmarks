@@ -1,1 +1,3 @@
-wasm-benchmarks
+# Adding numbers (small wasm files)
+
+Basic boilerplate
