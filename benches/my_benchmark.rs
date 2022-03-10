@@ -132,18 +132,37 @@ pub fn transform_radix2(real: &mut [f64], imag: &mut [f64]) {
 pub fn bench_fft(c: &mut Criterion) {
     let mut rng = rand::thread_rng();
 
-    let mut real: Vec<f64> = (0..4096)
+    let real: Vec<f64> = (0..4096)
         .map(|_| rng.gen_range(0.0f64..1000.0f64))
         .collect();
-    let real = &mut real[..];
 
-    let mut imag: Vec<f64> = vec![0.0; 4096];
-    let imag = &mut imag[..];
+    let imag: Vec<f64> = vec![0.0; 4096];
 
     c.bench_function("fft 4096", |b| {
-        b.iter(|| transform_radix2(black_box(real), black_box(imag)))
+        b.iter(|| {
+            // copy data
+
+            let mut real_inner = Vec::with_capacity(4096);
+
+            for i in &real {
+                real_inner.push(*i);
+            }
+
+            let real_inner = &mut real_inner[..];
+
+            let mut imag_inner = Vec::with_capacity(4096);
+
+            for i in &imag {
+                imag_inner.push(*i);
+            }
+
+            let imag_inner = &mut imag_inner[..];
+
+            // dop the thing
+            transform_radix2(black_box(real_inner), black_box(imag_inner))
+        })
     });
 }
 
-criterion_group!(benches, bench_minimum, bench_fft);
+criterion_group!(benches, bench_minimum /* , bench_fft*/);
 criterion_main!(benches);
