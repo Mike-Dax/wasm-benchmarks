@@ -1,6 +1,14 @@
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
-pub fn add(a: u32, b: u32) -> u32 {
-    a + b
+pub fn find_minimum(values: &[f64]) -> f64 {
+    let mut min = f64::INFINITY;
+
+    for &num in values {
+        if num < min {
+            min = num
+        }
+    }
+
+    min
 }
